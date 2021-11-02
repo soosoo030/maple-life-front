@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { Route } from 'react-router-dom';
+import Login from '../page/Login';
 
 export const ROUTE_PATH = {
   login: '/login',
@@ -11,7 +12,7 @@ export const routers = {
   login: {
     key: 'login',
     path: ROUTE_PATH.login,
-    component: <div>Login</div>,
+    component: <Login />,
   },
   signup: {
     key: 'signup',
