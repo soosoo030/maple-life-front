@@ -19,15 +19,16 @@ function Login() {
       <LoginImage
         css={{
           position: 'absolute',
-          right: 'calc(58.3333% - 100px)',
+          left: '41.6666%',
+          transform: 'translate(-85%)',
           height: '75%',
           width: 'auto',
           [theme.breakpoints.down('lg')]: {
-            bottom: 'calc(58.3333% - 100px)',
-            width: '75%',
+            top: '41.6666%',
+            width: '50%',
             height: 'auto',
-            right: '50%',
-            transform: 'translate(50%)',
+            left: '50%',
+            transform: 'translate(-50%, -85%)',
           },
           zIndex: 1,
         }}
@@ -38,7 +39,7 @@ function Login() {
         lg={5}
         css={{
           [theme.breakpoints.down('lg')]: {
-            height: '41.66666667%',
+            height: '41.6666%',
           },
         }}
       />
