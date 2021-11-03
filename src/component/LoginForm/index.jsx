@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Box, Button, Grid, TextField, Typography } from '@mui/material';
+import { LockIcon, PersonIcon } from '../../svg';
 
 function LoginForm() {
   return (
@@ -10,20 +11,25 @@ function LoginForm() {
         width: 1,
         height: 1,
         display: 'flex',
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: 'primary.light',
       }}
     >
       <Grid
         container
-        justifyContent="flex-end"
-        alignContent="center"
+        justifyContent="center"
+        alignItems="stretch"
+        direction="column"
+        flexWrap="nowrap"
         sx={{
           right: 0,
-          width: '75%',
+          width: 0.4,
+          height: 0.5,
+          maxWidth: 400,
         }}
       >
-        <Grid item xs={12} lg={8}>
+        <Grid item>
           <Typography
             fontFamily="'Slabo 27px'"
             variant="h1"
@@ -34,7 +40,7 @@ function LoginForm() {
             LOGIN
           </Typography>
         </Grid>
-        <Grid item xs={12} lg={8}>
+        <Grid item>
           <TextField
             variant="standard"
             label={
@@ -45,7 +51,7 @@ function LoginForm() {
             margin="normal"
             InputLabelProps={{ shrink: true }}
             InputProps={{
-              startAdornment: <i data-eva="person" />,
+              startAdornment: <PersonIcon css={{ width: 22 }} />,
             }}
             inputProps={{
               style: {
@@ -54,11 +60,11 @@ function LoginForm() {
               },
             }}
             sx={{
-              width: '75%',
+              width: 1,
             }}
           />
         </Grid>
-        <Grid item xs={12} lg={8}>
+        <Grid item>
           <TextField
             variant="standard"
             type="password"
@@ -70,7 +76,7 @@ function LoginForm() {
             margin="normal"
             InputLabelProps={{ shrink: true }}
             InputProps={{
-              startAdornment: <i data-eva="lock" />,
+              startAdornment: <LockIcon css={{ width: 22 }} />,
             }}
             inputProps={{
               style: {
@@ -79,21 +85,26 @@ function LoginForm() {
               },
             }}
             sx={{
-              width: '75%',
+              width: 1,
             }}
           />
         </Grid>
-        <Grid item xs={12} lg={8}>
+        <Grid item position="relative">
           <Typography
-            align="right"
-            fontFamily="'Slabo 27px'"
-            color="background.default"
-            width="75%"
+            variant="button"
+            sx={{
+              fontFamily: '"Slabo 27px"',
+              color: 'background.default',
+              cursor: 'pointer',
+              ml: 'auto',
+              position: 'absolute',
+              right: 0,
+            }}
           >
             Create Account
           </Typography>
         </Grid>
-        <Grid item xs={12} lg={8}>
+        <Grid item>
           <Button
             variant="contained"
             disableElevation
@@ -102,9 +113,8 @@ function LoginForm() {
               backgroundColor: 'primary.dark',
               height: 66,
               borderRadius: '33px',
-              width: '75%',
-              position: 'relative',
-              top: '10vmin',
+              width: 1,
+              mt: '10vmin',
               fontSize: 24,
               fontFamily: '"Slabo 27px"',
             }}
