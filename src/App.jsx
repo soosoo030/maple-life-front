@@ -1,21 +1,15 @@
 import {
-  ThemeProvider,
-  StyledEngineProvider,
   CssBaseline,
   GlobalStyles,
+  StyledEngineProvider,
+  ThemeProvider,
 } from '@mui/material';
 
 import mapleLifeTheme from './theme';
-import { BrowserRouter, Switch } from 'react-router-dom';
-import { generateRoutes, routers } from './routes';
-import * as eva from 'eva-icons';
-import { useEffect } from 'react';
+import Main from './component/Main';
+import { RecoilRoot } from 'recoil';
 
 function App() {
-  useEffect(() => {
-    eva.replace();
-  });
-
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={mapleLifeTheme}>
@@ -29,12 +23,13 @@ function App() {
             'div#root': {
               width: '100%',
               height: '100%',
+              position: 'relative',
             },
           }}
         />
-        <BrowserRouter>
-          <Switch>{generateRoutes(routers)}</Switch>
-        </BrowserRouter>
+        <RecoilRoot>
+          <Main />
+        </RecoilRoot>
       </ThemeProvider>
     </StyledEngineProvider>
   );
