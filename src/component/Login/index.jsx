@@ -52,7 +52,7 @@ function Login() {
               position: 'absolute',
               top: '50%',
               right: '50%',
-              width: '65vmin',
+              width: '50vmin',
               height: 'auto',
               transform: 'translate(15%, -50%)',
               '@media(orientation: portrait)': {
