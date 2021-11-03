@@ -18,15 +18,18 @@ function LoginForm() {
     >
       <Grid
         container
-        justifyContent="center"
+        justifyContent="space-around"
         alignItems="stretch"
         direction="column"
         flexWrap="nowrap"
+        px={2}
+        py={4}
         sx={{
           right: 0,
           width: 0.4,
-          height: 0.5,
+          height: 0.4,
           maxWidth: 400,
+          minWidth: 230,
         }}
       >
         <Grid item>
@@ -35,7 +38,8 @@ function LoginForm() {
             variant="h1"
             align="left"
             color="background.default"
-            mb={5}
+            fontSize={54}
+            mb={3}
           >
             LOGIN
           </Typography>
@@ -48,7 +52,7 @@ function LoginForm() {
                 Id
               </Typography>
             }
-            margin="normal"
+            margin="dense"
             InputLabelProps={{ shrink: true }}
             InputProps={{
               startAdornment: <PersonIcon css={{ width: 22 }} />,
@@ -73,7 +77,7 @@ function LoginForm() {
                 Password
               </Typography>
             }
-            margin="normal"
+            margin="dense"
             InputLabelProps={{ shrink: true }}
             InputProps={{
               startAdornment: <LockIcon css={{ width: 22 }} />,
@@ -111,10 +115,10 @@ function LoginForm() {
             fullWidth
             sx={{
               backgroundColor: 'primary.dark',
-              height: 66,
-              borderRadius: '33px',
+              height: 42,
+              borderRadius: '21px',
               width: 1,
-              mt: '10vmin',
+              mt: 6,
               fontSize: 24,
               fontFamily: '"Slabo 27px"',
             }}
