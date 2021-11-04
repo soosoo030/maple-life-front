@@ -3,6 +3,7 @@ import LoginAnnounceModal from '../LoginAnnounceModal';
 import { useState } from 'react';
 import { Box } from '@mui/material';
 import Task from '../Task';
+import ExpBar from '../ExpBar';
 
 export default function Main() {
   const [open, setOpen] = useState(true);
@@ -32,6 +33,7 @@ export default function Main() {
       <Box sx={{ width: 400 }}>
         <Task icon="sun" task_title="단풍톤 코딩" expected_time={3.5} dense />
       </Box>
+      <ExpBar ratio={0.3} />
     </Box>
   );
 }
