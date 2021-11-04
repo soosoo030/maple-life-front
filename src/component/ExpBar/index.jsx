@@ -3,7 +3,6 @@ import { useTheme } from '@emotion/react';
 
 function ExpBar({ ratio }) {
   const theme = useTheme();
-  console.log(Math.PI * 2 * (1 - ratio) * 45);
 
   return (
     <svg viewBox="0 0 100 100" width="75vmin" height="75vmin">
