@@ -38,8 +38,8 @@ function LoginForm() {
             variant="h1"
             align="left"
             color="background.default"
-            fontSize={54}
-            mb={3}
+            fontSize={[36, 36, 54]}
+            mb={[1, 1, 3]}
           >
             LOGIN
           </Typography>
