@@ -7,7 +7,7 @@ export default function LoginAnnounceModal({ open, closeModal }) {
   const setLoginOpen = useSetRecoilState(openPageAtom('login'));
 
   return (
-    <Modal open={open}>
+    <Modal open={open} onClose={closeModal}>
       <Grid
         container
         justifyContent="center"
