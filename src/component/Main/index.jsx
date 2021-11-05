@@ -4,12 +4,15 @@ import { useState } from 'react';
 import { Box } from '@mui/material';
 import Task from '../Task';
 import ExpBar from '../ExpBar';
+import AddTaskModal from '../AddTaskModal';
 
 export default function Main() {
   const [open, setOpen] = useState(true);
 
   return (
     <Box>
+      <AddTaskModal />
+
       <Login />
       <LoginAnnounceModal open={open} closeModal={() => setOpen(false)} />
       <Box sx={{ width: 250 }}>
