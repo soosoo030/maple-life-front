@@ -23,6 +23,8 @@ import {
 import { asyncTasks } from '../../atoms/task';
 import _ from 'lodash';
 
+import TaskButton from '../TaskButton';
+
 const StyledFab = styled(Fab)({
   position: 'absolute',
   zIndex: 1,
