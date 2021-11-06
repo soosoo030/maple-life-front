@@ -21,18 +21,25 @@ export default function AddTaskModal({ open, closeModal }) {
     <Box
       sx={{
         backgroundColor: 'primary.main',
-        padding: 2
+        padding: 2,
       }}
     >
-      <Grid container>
-        <Grid item xs="8"
+      <Grid container
+        sx={{
+          justifyContent: "center",
+          '@media(orientation:portrait)': {
+            flexDirection: 'column'
+          }
+        }}
+      >
+        <Grid item
           sx={{
             backgroundColor: 'background.default',
           }}
         >
           <FormRow />
         </Grid>
-        <Grid item xs="4">
+        <Grid item>
           <FormRow2 />
         </Grid>
       </Grid>
