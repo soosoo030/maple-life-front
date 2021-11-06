@@ -1,5 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, css, Grid, Paper, styled, Typography } from '@mui/material';
+import {
+  Box,
+  css,
+  Grid,
+  IconButton,
+  Paper,
+  styled,
+  Typography,
+} from '@mui/material';
 import {
   CheckIcon,
   DeleteIcon,
@@ -9,6 +17,9 @@ import {
   SunIcon,
 } from '../../svg';
 import _ from 'lodash';
+import TaskAPI from '../../api/TaskAPI';
+import { useResetRecoilState, useSetRecoilState } from 'recoil';
+import { asyncTasks, editTaskTarget, openTaskModal } from '../../atoms/task';
 
 const iconCss = css({
   width: 70,
@@ -37,6 +48,10 @@ function Task({ task_id, task_title, expected_time, status, icon, dense }) {
   const titleRef = useRef(null);
   const titleContainerRef = useRef(null);
   const [hasSpace, setHasSpace] = useState(false);
+
+  const reloadTasks = useResetRecoilState(asyncTasks);
+  const setEditableTaskTarget = useSetRecoilState(editTaskTarget);
+  const setOpenTaskModal = useSetRecoilState(openTaskModal);
 
   useEffect(() => {
     if (titleRef.current && titleContainerRef.current) {
@@ -143,9 +158,33 @@ function Task({ task_id, task_title, expected_time, status, icon, dense }) {
                 height: 1,
               }}
             >
-              <CheckIcon css={actionIconCss} />
-              <EditIcon css={actionIconCss} />
-              <DeleteIcon css={actionIconCss} />
+              <IconButton
+                onClick={() => {
+                  TaskAPI.completeTask(task_id).then(reloadTasks);
+                }}
+              >
+                <CheckIcon css={actionIconCss} />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  setEditableTaskTarget({
+                    task_id,
+                    task_title,
+                    expected_time,
+                    icon,
+                  });
+                  setOpenTaskModal(true);
+                }}
+              >
+                <EditIcon css={actionIconCss} />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  TaskAPI.deleteTask(task_id).then(reloadTasks);
+                }}
+              >
+                <DeleteIcon css={actionIconCss} />
+              </IconButton>
             </Box>
           </Grid>
         )}

@@ -1,7 +1,34 @@
 import React, { useState } from 'react';
-import { Box, Button, css, Grid, Modal, OutlinedInput, TextField, Typography, FormControl, MenuItem, InputLabel, Select } from '@mui/material';
+import {
+  Box,
+  Button,
+  css,
+  Grid,
+  Modal,
+  OutlinedInput,
+  TextField,
+  Typography,
+  FormControl,
+  MenuItem,
+  InputLabel,
+  Select,
+} from '@mui/material';
 import { DropletIcon, MusicIcon, SunIcon } from '../../svg';
-
+import _ from 'lodash';
+import {
+  useForm,
+  useFormContext,
+  FormProvider,
+  Controller,
+} from 'react-hook-form';
+import TaskAPI from '../../api/TaskAPI';
+import {
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+  useSetRecoilState,
+} from 'recoil';
+import { asyncTasks, editTaskTarget, openTaskModal } from '../../atoms/task';
 
 const iconCss = css({
   width: 140,
@@ -16,98 +43,174 @@ const iconVariant = {
   droplet: <DropletIcon css={iconCss} />,
   music: <MusicIcon css={iconCss} />,
 };
-export default function AddTaskModal({ open, closeModal }) {
-  return (
-    <Modal open={open} onClose={closeModal}
-      sx={{
-        padding: 2,
-        maxWidth: '700px',
-      }}
-    >
-      <Grid container
-        display="flex"
-        sx={{
-          justifyContent: "center",
-          backgroundColor: 'primary.main',
-          padding: '20px',
-          '@media(orientation:portrait)': {
-            flexDirection: 'column'
-          }
-        }}
-      >
-        <Grid item
-          sx={{
-            backgroundColor: 'background.default',
-          }}
-        >
-          <FormRow />
+export default function AddTaskModal() {
+  const editableTask = useRecoilValue(editTaskTarget);
+  const resetEditableTask = useResetRecoilState(editTaskTarget);
+  const [open, setOpenTaskModal] = useRecoilState(openTaskModal);
 
-        </Grid>
-        <Grid item>
+  const methods = useForm({
+    defaultValues:
+      editableTask !== null
+        ? {
+            task_title: editableTask.task_title,
+            expected_time: editableTask.expected_time,
+            icon: editableTask.icon,
+          }
+        : {
+            task_title: '',
+            expected_time: 0.5,
+            icon: 'sun',
+          },
+    shouldUnregister: true,
+  });
+
+  function closeModal() {
+    setOpenTaskModal(false);
+    methods.reset();
+    resetEditableTask();
+  }
+  console.log(
+    editableTask !== null
+      ? {
+          task_title: editableTask.task_title,
+          expected_time: editableTask.expected_time,
+          icon: editableTask.icon,
+        }
+      : {
+          task_title: '',
+          expected_time: 0.5,
+          icon: 'sun',
+        }
+  );
+
+  const reloadTasks = useResetRecoilState(asyncTasks);
+
+  return (
+    <FormProvider {...methods}>
+      <Modal open={open} onClose={closeModal}>
+        <form
+          onSubmit={methods.handleSubmit((data) => {
+            if (editableTask !== null) {
+              const { task_id, ...restData } = data;
+              TaskAPI.editTask(task_id, restData).then(() => {
+                reloadTasks();
+                closeModal();
+              });
+            } else {
+              TaskAPI.createTask(data).then(() => {
+                reloadTasks();
+                closeModal();
+              });
+            }
+          })}
+        >
           <Grid
             container
-            justifyContent="space-around"
-            alignItems="stretch"
-            direction="column"
-            flexWrap="nowrap"
-            padding="20px"
+            sx={{
+              justifyContent: 'center',
+              backgroundColor: 'primary.main',
+              padding: '20px',
+              '@media(orientation:portrait)': {
+                flexDirection: 'column',
+              },
+              position: 'absolute',
+              left: '50%',
+              bottom: 130,
+              transform: 'translate(-50%)',
+              maxWidth: '700px',
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: -20,
+                left: '50%',
+                transform: 'translate(-50%)',
+                display: 'block',
+                width: 0,
+                zIndex: 1,
+                borderStyle: 'solid',
+                borderColor: (theme) =>
+                  `${theme.palette.primary.main} transparent`,
+                borderWidth: '20px 20px 0',
+              },
+            }}
           >
-            <Grid item
+            <Grid
+              item
               sx={{
-                backgroundColor: 'primary.dark'
+                backgroundColor: 'background.default',
               }}
             >
-              <IconSelect />
+              <FormRow />
             </Grid>
             <Grid item>
-              <Button
-                variant="contained"
-                disableElevation
-                fullWidth
-                onClick={() => { closeModal(); }}
-                sx={{
-                  backgroundColor: 'secondary.main',
-                  borderRadius: '25px',
-                  width: 1,
-                  fontFamily: '"Slabo 27px"',
-                  mt: 2,
-                  fontSize: 24,
-                  '&:hover': {
-                    backgroundColor: 'secondary.main'
-                  }
-                }}
+              <Grid
+                container
+                justifyContent="space-around"
+                alignItems="stretch"
+                direction="column"
+                flexWrap="nowrap"
+                padding="20px"
               >
-                SUBMIT
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                disableElevation
-                fullWidth
-                onClick={() => { closeModal() }}
-                sx={{
-                  backgroundColor: 'secondary.main',
-                  borderRadius: '25px',
-                  width: 1,
-                  fontFamily: '"Slabo 27px"',
-                  mt: 2,
-                  mb: 2,
-                  fontSize: 24,
-                  '&:hover': {
-                    backgroundColor: 'secondary.main'
-                  }
-
-                }}
-              >
-                CANCEL
-              </Button>
+                <Grid
+                  item
+                  sx={{
+                    backgroundColor: 'primary.dark',
+                  }}
+                >
+                  <IconSelect />
+                </Grid>
+                <Grid item>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    disableElevation
+                    fullWidth
+                    sx={{
+                      backgroundColor: 'secondary.main',
+                      borderRadius: '25px',
+                      width: 1,
+                      fontFamily: '"Slabo 27px"',
+                      mt: 2,
+                      fontSize: 24,
+                      '&:hover': {
+                        backgroundColor: 'secondary.main',
+                      },
+                    }}
+                  >
+                    SUBMIT
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    disableElevation
+                    fullWidth
+                    onClick={() => {
+                      closeModal();
+                    }}
+                    sx={{
+                      backgroundColor: 'secondary.main',
+                      borderRadius: '25px',
+                      width: 1,
+                      fontFamily: '"Slabo 27px"',
+                      mt: 2,
+                      mb: 2,
+                      fontSize: 24,
+                      '&:hover': {
+                        backgroundColor: 'secondary.main',
+                      },
+                    }}
+                  >
+                    CANCEL
+                  </Button>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </Grid>
-    </Modal >
-  )
+        </form>
+      </Modal>
+    </FormProvider>
+  );
 }
 
 function FormRow() {
@@ -121,15 +224,9 @@ function FormRow() {
       },
     },
   };
-  const [time, setTime] = React.useState('');
-  const handleChange = (event) => {
-    setTime(event.target.value);
-  };
 
-  const times = [
-    '0.5', '1.0', '1.5', '2.0', '2.5', '3.0', '3.5', '4.0', '4.5', '5.0',
-    '5.5', '6.0', '6.5', '7.0', '7.5', '8.0', '8.5', '9.0', '9.5', '10.0'
-  ]
+  const times = _.range(0.5, 24.5, 0.5);
+
   return (
     <Grid
       container
@@ -139,10 +236,11 @@ function FormRow() {
       flexWrap="nowrap"
       padding="20px"
       sx={{
-        justifyContent: 'center'
+        justifyContent: 'center',
       }}
     >
-      <Grid item
+      <Grid
+        item
         sx={{
           display: 'flex',
           justifyContent: 'center',
@@ -161,53 +259,68 @@ function FormRow() {
         </Typography>
       </Grid>
       <Grid item sx={{ mb: 5 }}>
-        <TextField
-          variant="standard"
-          placeholder="할 일을 적어주세요"
-          fullWidth
-          label={
-            <Typography fontFamily="'Slabo 27px'" fontSize="24px">
-              Task Name
-            </Typography>
-          }
-          margin="dense"
-          InputLabelProps={{ shrink: true }}
-          InputProps={{
-            style: {
-              color: '#5f5f5f',
-            }
+        <Controller
+          rules={{
+            required: 'Please enter task',
           }}
+          name="task_title"
+          render={({ field, fieldState }) => (
+            <TextField
+              {...field}
+              error={!!fieldState.error}
+              helperText={fieldState.error?.message}
+              variant="standard"
+              placeholder="할 일을 적어주세요"
+              fullWidth
+              label={
+                <Typography fontFamily="'Slabo 27px'" fontSize="24px">
+                  Task Name
+                </Typography>
+              }
+              margin="dense"
+              InputLabelProps={{ shrink: true }}
+              InputProps={{
+                style: {
+                  color: '#5f5f5f',
+                },
+              }}
+            />
+          )}
         />
       </Grid>
       <Grid item sx={{ minWidth: 250, mb: 5 }}>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Time</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={time}
-            label="Time"
-            input={<OutlinedInput label="Time" />}
-            MenuProps={MenuProps}
-            onChange={handleChange}
-          >
-            {times.map((time) => (
-              <MenuItem
-                key={time}
-                value={time}
-              >{time}H
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Controller
+          rules={{
+            required: 'Please select time',
+          }}
+          render={({ field, fieldState }) => (
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Time</InputLabel>
+              <Select
+                {...field}
+                error={!!fieldState.error}
+                labelId="demo-simple-select-label"
+                label="Time"
+                input={<OutlinedInput label="Time" />}
+                MenuProps={MenuProps}
+              >
+                {times.map((time) => (
+                  <MenuItem key={time} value={time}>
+                    {time}H
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+          name="expected_time"
+        />
       </Grid>
     </Grid>
-  )
+  );
 }
 
-
 function IconSelect() {
-  const [value, setValue] = useState('sun');
+  const { setValue, watch } = useFormContext();
 
   return (
     <Box>
@@ -219,16 +332,22 @@ function IconSelect() {
         flexWrap="nowrap"
       >
         <Grid item>
-          <Box>
-            {iconVariant[value]}
-          </Box>
+          <Box>{iconVariant[watch('icon')]}</Box>
         </Grid>
         <Grid item>
-          <Button onClick={() => setValue('sun')}><SunIcon css={actionIconCss} /></Button>
-          <Button onClick={() => setValue('droplet')} > <DropletIcon css={actionIconCss} /></Button>
-          <Button onClick={() => setValue('music')} > <MusicIcon css={actionIconCss} /></Button>
+          <Button onClick={() => setValue('icon', 'sun')}>
+            <SunIcon css={actionIconCss} />
+          </Button>
+          <Button onClick={() => setValue('icon', 'droplet')}>
+            {' '}
+            <DropletIcon css={actionIconCss} />
+          </Button>
+          <Button onClick={() => setValue('icon', 'music')}>
+            {' '}
+            <MusicIcon css={actionIconCss} />
+          </Button>
         </Grid>
       </Grid>
     </Box>
-  )
+  );
 }

@@ -10,6 +10,7 @@ const tasksAtom = atom({
 export const asyncTasks = selector({
   key: 'asyncTasks',
   async get({ get }) {
+    get(requestID('tasks'));
     const tasks = get(tasksAtom);
     if (tasks !== null) {
       return tasks;
@@ -24,7 +25,7 @@ export const asyncTasks = selector({
     } else {
       set(tasksAtom, tasks);
     }
-    set(requestID, (prev) => prev + 1);
+    set(requestID('tasks'), (prev) => prev + 1);
   },
 });
 
@@ -34,4 +35,14 @@ export const remainDailyTaskTime = selector({
     const tasks = get(asyncTasks);
     return tasks.data.available_task_time;
   },
+});
+
+export const editTaskTarget = atom({
+  key: 'editTaskMode',
+  default: null,
+});
+
+export const openTaskModal = atom({
+  key: 'openTaskModal',
+  default: false,
 });

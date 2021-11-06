@@ -20,8 +20,9 @@ import {
   useRecoilStateLoadable,
   useResetRecoilState,
 } from 'recoil';
-import { asyncTasks } from '../../atoms/task';
+import { asyncTasks, openTaskModal } from '../../atoms/task';
 import _ from 'lodash';
+import AddTaskModal from '../AddTaskModal';
 
 import TaskButton from '../TaskButton';
 
@@ -94,7 +95,8 @@ const sliderSetting = {
 };
 
 export default function Header() {
-  const [addTask, setAddTask] = useState(true);
+  const [addTask, setAddTask] = useRecoilState(openTaskModal);
+
   const [openTask, setOpenTask] = useState(false);
   const vmin = Math.min(window.innerHeight, window.innerWidth) / 100;
   const expandedAppBarHeight = vmin * 30;
@@ -136,6 +138,7 @@ export default function Header() {
         bgcolor: 'primary.light',
       }}
     >
+      <AddTaskModal open={addTask} closeModal={() => setAddTask(false)} />
       <Toolbar>
         <IconButton
           color="inherit"
@@ -204,7 +207,7 @@ export default function Header() {
               }}
             >
               {_.map(_.take(tasks, 3), (task) => (
-                <Grid item xs={4}>
+                <Grid item xs={4} key={task.task_id}>
                   <Task key={task.task_id} {...task} dense />
                 </Grid>
               ))}
@@ -232,9 +235,9 @@ export default function Header() {
               >
                 {tasksLoadable.state === 'loading' ? (
                   <>
-                    <Skeleton variant="rect" width="25%" height={200} />
-                    <Skeleton variant="rect" width="25%" height={200} />
-                    <Skeleton variant="rect" width="25%" height={200} />
+                    <Skeleton variant="rect" />
+                    <Skeleton variant="rect" />
+                    <Skeleton variant="rect" />
                   </>
                 ) : tasksLoadable.state === 'hasValue' ? (
                   _.map(tasks, (task) => <Task key={task.task_id} {...task} />)

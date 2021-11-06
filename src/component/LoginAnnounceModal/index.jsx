@@ -10,9 +10,9 @@ export default function LoginAnnounceModal({ open, closeModal }) {
     <Modal
       open={open}
       onClose={(evt, reason) => {
-        // if (reason !== 'backdropClick') {
-        closeModal();
-        // }
+        if (reason !== 'backdropClick') {
+          closeModal();
+        }
       }}
       disableEscapeKeyDown
     >
