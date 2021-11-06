@@ -7,6 +7,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Header from '../Header';
 import ExpBar from '../ExpBar';
+import imgUrl from './tree1.png';
 
 export default function Main() {
   const [announce, setAnnounce] = useState(true);
@@ -49,6 +50,16 @@ export default function Main() {
           <ExpBar
             ratio={0.3}
           />
+          <img
+            width="300px"
+            src={imgUrl}
+            sx={{
+              zIndex: "1",
+              postion: "absolute"
+
+            }} />
+
+
         </Grid>
       </Grid>
       <Login />
