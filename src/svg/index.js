@@ -9,3 +9,7 @@ export { ReactComponent as MusicIcon } from './music.svg';
 export { ReactComponent as CheckIcon } from './checkmark-circle-2-outline.svg';
 export { ReactComponent as EditIcon } from './edit.svg';
 export { ReactComponent as DeleteIcon } from './trash-2.svg';
+export { ReactComponent as PlusIcon } from './plus-circle.svg';
+export { ReactComponent as MenuIcon } from './menu.svg';
+export { ReactComponent as PrevIcon } from './arrow-ios-back.svg';
+export { ReactComponent as NextIcon } from './arrow-ios-forward.svg';

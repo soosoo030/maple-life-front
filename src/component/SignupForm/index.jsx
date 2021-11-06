@@ -1,21 +1,16 @@
 import React from 'react';
 
 import { Box, Button, Grid, TextField, Typography } from '@mui/material';
-import { LockIcon, PersonIcon } from '../../svg';
-import { useFormContext, Controller } from 'react-hook-form';
-import UserAPI from '../../api/UserAPI';
+import { Controller, useFormContext } from 'react-hook-form';
 
-function LoginForm({ goToSignup, onComplete }) {
+function SignupForm({ goToLogin }) {
   const { handleSubmit } = useFormContext();
 
   return (
     <Box
       component="form"
       onSubmit={handleSubmit((data) => {
-        UserAPI.login(data).then((res) => {
-          localStorage.setItem('token', res.data.data.jwt);
-          onComplete();
-        });
+        console.log(data);
       })}
       sx={{
         position: 'relative',
@@ -52,18 +47,49 @@ function LoginForm({ goToSignup, onComplete }) {
             fontSize={[36, 36, 54]}
             mb={[1, 1, 3]}
           >
-            LOGIN
+            Sign up
           </Typography>
         </Grid>
         <Grid item>
           <Controller
-            rules={{ required: 'Please enter your email' }}
+            rules={{ required: 'Username is required' }}
             render={({ field, fieldState }) => (
               <TextField
-                type="email"
                 {...field}
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
+                variant="standard"
+                type="text"
+                label={
+                  <Typography fontFamily="'Slabo 27px'" color="primary.dark">
+                    Username
+                  </Typography>
+                }
+                margin="dense"
+                InputLabelProps={{ shrink: true }}
+                inputProps={{
+                  style: {
+                    fontFamily: '"Slabo 27px"',
+                    color: 'white',
+                  },
+                }}
+                sx={{
+                  width: 1,
+                }}
+              />
+            )}
+            name="username"
+          />
+        </Grid>
+        <Grid item>
+          <Controller
+            rules={{ required: 'Email is required' }}
+            render={({ field, fieldState }) => (
+              <TextField
+                {...field}
+                error={!!fieldState.error}
+                helperText={fieldState.error?.message}
+                type="email"
                 variant="standard"
                 label={
                   <Typography fontFamily="'Slabo 27px'" color="primary.dark">
@@ -72,9 +98,6 @@ function LoginForm({ goToSignup, onComplete }) {
                 }
                 margin="dense"
                 InputLabelProps={{ shrink: true }}
-                InputProps={{
-                  startAdornment: <PersonIcon css={{ width: 22 }} />,
-                }}
                 inputProps={{
                   style: {
                     fontFamily: '"Slabo 27px"',
@@ -106,9 +129,6 @@ function LoginForm({ goToSignup, onComplete }) {
                 }
                 margin="dense"
                 InputLabelProps={{ shrink: true }}
-                InputProps={{
-                  startAdornment: <LockIcon css={{ width: 22 }} />,
-                }}
                 inputProps={{
                   style: {
                     fontFamily: '"Slabo 27px"',
@@ -134,9 +154,9 @@ function LoginForm({ goToSignup, onComplete }) {
               position: 'absolute',
               right: 0,
             }}
-            onClick={goToSignup}
+            onClick={goToLogin}
           >
-            Create Account
+            LOGIN
           </Typography>
         </Grid>
         <Grid item>
@@ -155,7 +175,7 @@ function LoginForm({ goToSignup, onComplete }) {
               fontFamily: '"Slabo 27px"',
             }}
           >
-            LOGIN
+            SIGN UP
           </Button>
         </Grid>
       </Grid>
@@ -163,4 +183,4 @@ function LoginForm({ goToSignup, onComplete }) {
   );
 }
 
-export default LoginForm;
+export default SignupForm;

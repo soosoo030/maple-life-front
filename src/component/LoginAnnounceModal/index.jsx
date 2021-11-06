@@ -7,7 +7,15 @@ export default function LoginAnnounceModal({ open, closeModal }) {
   const setLoginOpen = useSetRecoilState(openPageAtom('login'));
 
   return (
-    <Modal open={open} onClose={closeModal}>
+    <Modal
+      open={open}
+      onClose={(evt, reason) => {
+        // if (reason !== 'backdropClick') {
+        closeModal();
+        // }
+      }}
+      disableEscapeKeyDown
+    >
       <Grid
         container
         justifyContent="center"
