@@ -18,15 +18,17 @@ const iconVariant = {
 };
 export default function AddTaskModal({ open, closeModal }) {
   return (
-    <Box
+    <Modal open={open} onClose={closeModal}
       sx={{
-        backgroundColor: 'primary.main',
         padding: 2,
+        maxWidth: '700px',
       }}
     >
       <Grid container
         sx={{
           justifyContent: "center",
+          backgroundColor: 'primary.main',
+          padding: '20px',
           '@media(orientation:portrait)': {
             flexDirection: 'column'
           }
@@ -38,12 +40,72 @@ export default function AddTaskModal({ open, closeModal }) {
           }}
         >
           <FormRow />
+
         </Grid>
         <Grid item>
-          <FormRow2 />
+          <Grid
+            container
+            justifyContent="space-around"
+            alignItems="stretch"
+            direction="column"
+            flexWrap="nowrap"
+            padding="20px"
+          >
+            <Grid item
+              sx={{
+                backgroundColor: 'primary.dark'
+              }}
+            >
+              <IconSelect />
+            </Grid>
+            <Grid item>
+              <Button
+                variant="contained"
+                disableElevation
+                fullWidth
+                onClick={() => { closeModal(); }}
+                sx={{
+                  backgroundColor: 'secondary.main',
+                  borderRadius: '25px',
+                  width: 1,
+                  fontFamily: '"Slabo 27px"',
+                  mt: 2,
+                  fontSize: 24,
+                  '&:hover': {
+                    backgroundColor: 'secondary.main'
+                  }
+                }}
+              >
+                SUBMIT
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="contained"
+                disableElevation
+                fullWidth
+                onClick={() => { closeModal() }}
+                sx={{
+                  backgroundColor: 'secondary.main',
+                  borderRadius: '25px',
+                  width: 1,
+                  fontFamily: '"Slabo 27px"',
+                  mt: 2,
+                  mb: 2,
+                  fontSize: 24,
+                  '&:hover': {
+                    backgroundColor: 'secondary.main'
+                  }
+
+                }}
+              >
+                CANCEL
+              </Button>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
-    </Box>
+    </Modal >
   )
 }
 
@@ -142,67 +204,7 @@ function FormRow() {
   )
 }
 
-function FormRow2() {
-  return (
-    <Grid
-      container
-      justifyContent="space-around"
-      alignItems="stretch"
-      direction="column"
-      flexWrap="nowrap"
-      padding="20px"
-    >
-      <Grid item
-        sx={{
-          backgroundColor: 'primary.dark'
-        }}
-      >
-        <IconSelect />
-      </Grid>
-      <Grid item>
-        <Button
-          variant="contained"
-          disableElevation
-          fullWidth
-          sx={{
-            backgroundColor: 'secondary.main',
-            borderRadius: '25px',
-            width: 1,
-            fontFamily: '"Slabo 27px"',
-            mt: 2,
-            fontSize: 24,
-            '&:hover': {
-              backgroundColor: 'secondary.main'
-            }
-          }}
-        >
-          SUBMIT
-        </Button>
-      </Grid>
-      <Grid item>
-        <Button
-          variant="contained"
-          disableElevation
-          fullWidth
-          sx={{
-            backgroundColor: 'secondary.main',
-            borderRadius: '25px',
-            width: 1,
-            fontFamily: '"Slabo 27px"',
-            mt: 2,
-            mb: 2,
-            fontSize: 24,
-            '&:hover': {
-              backgroundColor: 'secondary.main'
-            }
-          }}
-        >
-          CANCEL
-        </Button>
-      </Grid>
-    </Grid>
-  )
-}
+
 function IconSelect() {
   const [value, setValue] = useState('sun');
 
