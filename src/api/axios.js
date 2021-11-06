@@ -10,7 +10,7 @@ export default function createAxios() {
     Authorization: `Bearer ${localStorage.getItem('token')}`,
   };
 
-  axios.create({
+  return axios.create({
     baseURL: 'https://api.airini.synology.me',
     headers,
   });
