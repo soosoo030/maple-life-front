@@ -31,5 +31,5 @@ export default function usePageTransition(page) {
     setOpen(false);
   }
 
-  return { transition, closePage };
+  return { isOpen: open, transition, closePage };
 }

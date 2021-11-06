@@ -20,9 +20,11 @@
     "react-hook-form": "^7.18.1",
     "react-router-dom": "^6.0.1",
     "react-scripts": "4.0.3",
+    "react-slick": "^0.28.1",
     "react-spring": "^9.3.0",
     "recoil": "^0.4.1",
-    "swiper": "^7.2.0",
+    "sass": "^1.43.4",
+    "slick-carousel": "^1.8.1",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
