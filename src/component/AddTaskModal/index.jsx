@@ -25,6 +25,7 @@ export default function AddTaskModal({ open, closeModal }) {
       }}
     >
       <Grid container
+        display="flex"
         sx={{
           justifyContent: "center",
           backgroundColor: 'primary.main',

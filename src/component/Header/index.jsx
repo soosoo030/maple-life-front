@@ -16,6 +16,8 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
+import TaskButton from '../TaskButton';
+
 const StyledFab = styled(Fab)({
   position: 'absolute',
   zIndex: 1,
@@ -29,7 +31,6 @@ const StyledFab = styled(Fab)({
 const AnimatedAppBar = animated(AppBar);
 
 export default function Header() {
-  const [addTask, setAddTask] = useState(true);
   const [openTask, setOpenTask] = useState(false);
   const vmin = Math.min(window.innerHeight, window.innerWidth) / 100;
   const expandedAppBarHeight = vmin * 30;
@@ -133,17 +134,7 @@ export default function Header() {
         >
           <MenuIcon css={{ width: 60, height: 60 }} />
         </IconButton>
-        <StyledFab
-          color="white"
-          aria-label="add"
-          onClick={() => setAddTask((prevState) => !prevState)}
-        >
-          <PlusIcon
-            css={(theme) => ({
-              fill: theme.palette.secondary.main,
-            })}
-          />
-        </StyledFab>
+        <TaskButton />
         {!openTask && (
           <Grid container spacing={3} mt={0.5}>
             <Grid item xs={4}>
