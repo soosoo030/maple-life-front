@@ -8,10 +8,11 @@ import AddTaskModal from '../AddTaskModal';
 
 export default function Main() {
   const [open, setOpen] = useState(true);
+  const [addTaskOpen, setAddTaskOpen] = useState(true);
 
   return (
     <Box>
-      <AddTaskModal />
+      <AddTaskModal open={addTaskOpen} closeModal={() => setAddTaskOpen(false)} />
 
       <Login />
       <LoginAnnounceModal open={open} closeModal={() => setOpen(false)} />
