@@ -1,7 +1,7 @@
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import { MenuIcon, NextIcon, PlusIcon, PrevIcon } from '../../svg';
-import { Grid, Fab, AppBar, styled } from '@mui/material';
+import { Grid, Fab, AppBar, styled, Skeleton } from '@mui/material';
 import Task from '../Task';
 import {
   animated,
@@ -15,6 +15,13 @@ import React, { useState } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import {
+  useRecoilState,
+  useRecoilStateLoadable,
+  useResetRecoilState,
+} from 'recoil';
+import { asyncTasks } from '../../atoms/task';
+import _ from 'lodash';
 
 const StyledFab = styled(Fab)({
   position: 'absolute',
@@ -27,6 +34,62 @@ const StyledFab = styled(Fab)({
 });
 
 const AnimatedAppBar = animated(AppBar);
+
+const sliderSetting = {
+  dots: true,
+  infinite: true,
+  slidesToShow: 3,
+  slidesToScroll: 3,
+  nextArrow: (
+    <NextIcon
+      css={{
+        '&.slick-next': {
+          width: 30,
+          height: 30,
+          position: 'absolute',
+          right: -54,
+        },
+      }}
+    />
+  ),
+  prevArrow: (
+    <PrevIcon
+      css={{
+        '&.slick-prev': {
+          width: 30,
+          height: 30,
+          position: 'absolute',
+          left: -54,
+        },
+      }}
+    />
+  ),
+  adaptiveHeight: true,
+  responsive: [
+    {
+      breakpoint: 1024,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 3,
+      },
+    },
+    {
+      breakpoint: 600,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 2,
+        initialSlide: 2,
+      },
+    },
+    {
+      breakpoint: 480,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1,
+      },
+    },
+  ],
+};
 
 export default function Header() {
   const [addTask, setAddTask] = useState(true);
@@ -57,61 +120,9 @@ export default function Header() {
 
   useChain([appbarRef, sliderRef], [0, openTask ? 0.1 : 0]);
 
-  const sliderSetting = {
-    dots: true,
-    infinite: true,
-    slidesToShow: 3,
-    slidesToScroll: 3,
-    nextArrow: (
-      <NextIcon
-        css={{
-          '&.slick-next': {
-            width: 30,
-            height: 30,
-            position: 'absolute',
-            right: -54,
-          },
-        }}
-      />
-    ),
-    prevArrow: (
-      <PrevIcon
-        css={{
-          '&.slick-prev': {
-            width: 30,
-            height: 30,
-            position: 'absolute',
-            left: -54,
-          },
-        }}
-      />
-    ),
-    adaptiveHeight: true,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          initialSlide: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
+  const [tasksLoadable, setTasks] = useRecoilStateLoadable(asyncTasks);
+  const reloadTasks = useResetRecoilState(asyncTasks);
+  const tasks = tasksLoadable.contents?.data?.tasks;
 
   return (
     <AnimatedAppBar
@@ -130,8 +141,19 @@ export default function Header() {
           onClick={() => {
             setOpenTask(!openTask);
           }}
+          sx={{
+            position: 'absolute',
+            left: 8,
+            top: 4,
+          }}
         >
-          <MenuIcon css={{ width: 60, height: 60 }} />
+          <MenuIcon
+            css={(theme) => ({
+              width: 60,
+              height: 60,
+              fill: theme.palette.secondary.main,
+            })}
+          />
         </IconButton>
         <StyledFab
           color="white"
@@ -144,37 +166,48 @@ export default function Header() {
             })}
           />
         </StyledFab>
-        {!openTask && (
-          <Grid container spacing={3} mt={0.5}>
-            <Grid item xs={4}>
-              <Task
-                task_title="단풍톤 코딩"
-                expected_time={3.5}
-                status="DOING"
-                icon="droplet"
-                dense
-              />
+        {!openTask &&
+          (tasksLoadable.state === 'loading' ? (
+            <Grid
+              container
+              spacing={3}
+              mt={0.5}
+              width="90%"
+              sx={{
+                position: 'absolute',
+                left: '50%',
+                transform: 'translate(-50%, 0)',
+              }}
+            >
+              <Grid item xs={4}>
+                <Skeleton variant="rect" width="100%" height={20} />
+              </Grid>
+              <Grid item xs={4}>
+                <Skeleton variant="rect" width="100%" height={20} />
+              </Grid>
+              <Grid item xs={4}>
+                <Skeleton variant="rect" width="100%" height={20} />
+              </Grid>
             </Grid>
-            <Grid item xs={4}>
-              <Task
-                task_title="단풍톤 코딩"
-                expected_time={3.5}
-                status="DOING"
-                icon="droplet"
-                dense
-              />
+          ) : tasksLoadable.state === 'hasValue' ? (
+            <Grid
+              container
+              spacing={3}
+              mt={0.5}
+              width="90%"
+              sx={{
+                position: 'absolute',
+                left: '50%',
+                transform: 'translate(-50%, 0)',
+              }}
+            >
+              {_.map(_.take(tasks, 3), (task) => (
+                <Grid item xs={4}>
+                  <Task key={task.task_id} {...task} dense />
+                </Grid>
+              ))}
             </Grid>
-            <Grid item xs={4}>
-              <Task
-                task_title="단풍톤 코딩"
-                expected_time={3.5}
-                status="DOING"
-                icon="droplet"
-                dense
-              />
-            </Grid>
-          </Grid>
-        )}
+          ) : null)}
       </Toolbar>
       {sliderTransition(
         (style, open) =>
@@ -195,30 +228,15 @@ export default function Header() {
                   },
                 }}
               >
-                <Task
-                  task_title="단풍톤 코딩"
-                  expected_time={3.5}
-                  status="DOING"
-                  icon="droplet"
-                />
-                <Task
-                  task_title="단풍톤 코딩"
-                  expected_time={3.5}
-                  status="DOING"
-                  icon="droplet"
-                />
-                <Task
-                  task_title="단풍톤 코딩"
-                  expected_time={3.5}
-                  status="DOING"
-                  icon="droplet"
-                />
-                <Task
-                  task_title="단풍톤 코딩"
-                  expected_time={3.5}
-                  status="DOING"
-                  icon="droplet"
-                />
+                {tasksLoadable.state === 'loading' ? (
+                  <>
+                    <Skeleton variant="rect" width="25%" height={200} />
+                    <Skeleton variant="rect" width="25%" height={200} />
+                    <Skeleton variant="rect" width="25%" height={200} />
+                  </>
+                ) : tasksLoadable.state === 'hasValue' ? (
+                  _.map(tasks, (task) => <Task key={task.task_id} {...task} />)
+                ) : null}
               </Slider>
             </animated.div>
           )
